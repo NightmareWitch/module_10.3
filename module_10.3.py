@@ -13,7 +13,7 @@ class Bank:
         # cash = 0
         for i in range(0, 100):
             random_number = randint(50, 500)
-            if self.balance >= 500 and self.lock.locked():
+            if self.balance >= 500 and self.lock.acquire():
                 self.lock.release()
             self.balance += random_number   # пополняем баланс случайной суммой
             print(f'Пополнение: {random_number}. Баланс: {self.balance}')
@@ -35,7 +35,7 @@ class Bank:
 
 vtb = Bank(0, lock)
 # Т.к. методы принимают self, в потоки нужно передать сам объект класса Bank
-th1 = threading.Thread(target=vtb.deposit(), args=(vtb,))
+th1 = threading.Thread(target=vtb.deposit, args=(vtb,))
 th2 = threading.Thread(target=vtb.take(), args=(vtb,))
 
 th1.start()
